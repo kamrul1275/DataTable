@@ -1,0 +1,159 @@
+search : laravel ui in laravel 9
+
+
+
+Laravel Authentication: 
+
+1.Install laravel project....>
+
+  composer create-project laravel/laravel example-app
+
+
+
+
+2. Create .env file, include lengths/my sql,
+    App/providers/auth=> function boot
+
+        use Illuminate\Support\Facades\Schema;
+ 
+
+     public function boot()
+           {
+              Schema::defaultStringLength(191);
+            }
+
+
+
+3. Authentication command:
+                
+   composer require laravel/ui   
+ 
+   php artisan ui bootstrap --auth                            
+  
+
+   npm install &&
+   npm run dev
+
+   php artisan migrate
+
+
+
+Admin part:
+
+1.Admin Controller: Create, php artisan make:controller Backen/AdminController
+
+2.Dashboard Controller: Create, php artisan make:controller Backen/DashboardController
+
+
+3.create Moddel Admin model
+
+         php artisan make:model Admin -m
+
+         
+
+4.	Update Admin model :
+use Illuminate\Foundation\Auth\User as Authenticatable;
+
+
+class Admin extends Authenticatable
+{
+    use HasFactory;
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+    ];
+
+ protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+}
+
+
+5.	Config: => Auth.php=>
+                      'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+        ],
+
+6.Create Middleware:
+
+
+      php artisan make:middleware Admin
+
+
+    public function handle(Request $request, Closure $next)
+    {
+if(!Auth::guard('admin')->check()){
+    return redirect('admin/login');
+       
+    }
+ return $next($request);
+
+7.	Change Kernel.php :
+protected $routeMiddleware=[
+'admin' => \App\Http\Middleware\Admin::class,
+]
+
+
+Middleware Route:
+
+Route::group(['middleware'=>'admin'], function(){
+    Route::get('admin/dashboard', [DashboardController::class,'dashboard']);
+
+
+   Route::get('/admin-logout', [App\Http\Controllers\Backen\AdminController::class, 'adminLogout'])->name('admin.login.logout');
+});
+
+Route::get('admin/login', [AdminController::class,'AdminloginFrom']);
+Route::post('admin-login', [AdminController::class,'adminLogin']);
+
+
+   
+8.	Create Admin Login Page, Dashboard page…
+
+9. Admin Controller store:
+
+    public function adminLogin(Request $request)
+    {
+        $request->validate([
+
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
+     if(Auth::guard('admin')->attempt([
+     'email'=>$request->email,   'password'=>$request->password])){
+
+ return redirect('/admin/dashboard');
+     }else{
+
+        Session::flash('msg', 'Invalid Email or Password');
+
+        return redirect('/admin/login');
+     }
+   }
+
+
+
+
+9.	Logout part:
+
+
+   
+   public function adminLogout()
+   {
+     auth::guard('admin')->logout();
+
+     return redirect('/admin-logout');
+   }
+
+
+
+
+
