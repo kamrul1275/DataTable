@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\HomeController;
-use Illuminate\Support\Facades\Auth; 
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +23,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/test-user',[HomeController::class, 'anyData'])->name('test-user');
 
 
 
@@ -37,3 +38,9 @@ Route::post('user_Store',[HomeController::class, 'get_store_data'])->name('user.
 Route::get('user_export',[HomeController::class, 'get_user_data'])->name('user.export');
 
 
+
+
+// datatable..........
+
+
+// Route::get('/', [HomeController::class, 'indexadata']);

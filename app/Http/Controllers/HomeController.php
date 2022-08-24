@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use Yajra\Datatables\Datatables;
 
-
+use App\DataTables\UserDataTable;
 use App\Exports\StudentExport;
+use Yajra\DataTables\Services\DataTable;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\StoreStudentRequest;
 use App\Models\User;
@@ -30,9 +32,27 @@ class HomeController extends Controller
     public function index()
     {
 
-        $users = User::get();
-        return view('home', compact('users'));
+    //  return $dataTable->render('users');
+    $users = User::get();
+
+         return view('home', compact('users'));
     }
+
+
+
+
+
+    public function anyData()
+    {
+        return Datatables::of(User::query())->make(true);
+    }
+
+
+
+
+
+
+
 
 
 
@@ -55,8 +75,6 @@ public function get_store_data(Request $request)
     $student->save();
     return redirect()->back()->with('success','Data submited successfully!');
 }
-
-
 
 
 

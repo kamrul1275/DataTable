@@ -22,20 +22,20 @@
 
 
 
-            <table class="table " id="myTable">
+            <table class="table " id="users">
                 <thead>
                   <tr>
-                    <th scope="col">No</th>
+                    <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Email</th>
-                    <th scope="col">Action</th>
+                    {{--  <th scope="col">Action</th>  --}}
                   </tr>
 
 
                 </thead>
 
 
-                @foreach ( $users as $key=> $user )
+                {{--  @foreach ( $users as $key=> $user )
 
                    <tr>
 
@@ -49,7 +49,7 @@
 
                     </tr>
 
-                @endforeach
+                @endforeach  --}}
 
                 <tbody>
 
@@ -69,13 +69,23 @@
 
 
 
-<script>
 
-    $(document).ready( function () {
-        $('#myTable').DataTable();
-    } );
+    <script>
+        $(function() {
+            $('#users').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: '{!! route('test-user') !!}',
+                columns: [
+                    { data: 'id', name: 'id' },
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
 
 
+                ]
+            });
+        });
+        </script>
 
 </script>
 
